@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SVGCraft — Create in vectors</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0c0d13;--panel:#141620;--panel2:#1b1e2b;--line:#292d3d;--muted:#9298ad;--text:#f4f5fb;--purple:#9875ff;--pink:#e78bff;--cyan:#76d9ff}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:"DM Sans",sans-serif}button,input,select{font:inherit}button{cursor:pointer;color:inherit}
+#home{min-height:100vh;background:radial-gradient(ellipse at 78% 18%,#38245d 0,transparent 35%),radial-gradient(ellipse at 8% 80%,#172b50 0,transparent 32%),var(--bg)}
+.nav{height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(22px,6vw,90px);border-bottom:1px solid #ffffff12}.brand{display:flex;align-items:center;gap:12px;font:800 22px Manrope,sans-serif;letter-spacing:-.8px}.logo{width:34px;height:34px}.navlinks{display:flex;gap:25px;color:#c5c8d7;font-size:14px}.navlinks a{color:inherit;text-decoration:none}.navbtn,.primary{border:0;border-radius:12px;padding:12px 18px;background:linear-gradient(120deg,var(--purple),#bd78e9);font-weight:800;color:white;box-shadow:0 8px 28px #9875ff33}
+.hero{max-width:1180px;margin:auto;padding:100px 28px 80px;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:55px}.eyebrow{color:#c6aaff;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase}.hero h1{font:800 clamp(48px,6vw,78px)/1.02 Manrope,sans-serif;letter-spacing:-4px;margin:20px 0}.gradient{background:linear-gradient(100deg,#a78aff,#e4a1f6,#7edfff);color:transparent;background-clip:text}.hero p{max-width:550px;color:#aeb3c7;font-size:18px;line-height:1.7}.heroactions{display:flex;gap:14px;margin-top:30px}.secondary{border:1px solid #ffffff2b;background:#ffffff0a;padding:12px 18px;border-radius:12px;font-weight:700}.preview{border:1px solid #ffffff20;border-radius:24px;padding:16px;background:#171925cc;box-shadow:0 30px 90px #0008;transform:rotate(2deg)}.previewbar{display:flex;gap:6px;padding:4px 4px 14px}.dot{width:8px;height:8px;border-radius:50%;background:#777}.previewart{height:330px;border-radius:14px;background:linear-gradient(135deg,#211b3c,#14263b);display:grid;place-items:center;overflow:hidden}.previewart svg{width:90%;height:90%}.features{max-width:1180px;margin:auto;padding:20px 28px 90px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.feature{background:#ffffff08;border:1px solid #ffffff12;border-radius:18px;padding:24px}.feature b{font:700 17px Manrope}.feature p{color:var(--muted);line-height:1.6;font-size:14px}.footer{border-top:1px solid #ffffff12;padding:25px 6vw;color:#858ba0;display:flex;justify-content:space-between;font-size:13px}
+#editor{display:none;height:100vh;min-height:600px;flex-direction:column;background:#0d0f16}.topbar{height:62px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid var(--line);background:#12141d}.top-left,.top-right{display:flex;align-items:center;gap:12px}.smallbrand{font:800 18px Manrope;display:flex;gap:9px;align-items:center}.smallbrand .logo{width:28px;height:28px}.projectname{color:#9da3b7;font-size:13px;border-left:1px solid var(--line);padding-left:14px}.topbutton{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:8px 12px;font-size:12px;font-weight:700}.topbutton.primary{border:0;background:linear-gradient(120deg,var(--purple),#bd78e9);padding:9px 15px}
+.workspace{display:grid;grid-template-columns:112px minmax(0,1fr) 390px;min-height:0;flex:1}.toolbar{background:#12141d;border-right:1px solid var(--line);padding:14px 10px;display:flex;flex-direction:column;gap:8px;align-items:stretch;overflow-y:auto}.tool{width:100%;min-height:58px;border:1px solid transparent;background:transparent;border-radius:10px;color:#aab0c3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px}.tool span{font-size:19px}.tool:hover,.tool.active{background:#242037;border-color:#55447e;color:#d9caff}.toolsep{height:1px;background:var(--line);width:100%;margin:5px 0}
+.stage{display:flex;min-width:0;min-height:0;flex-direction:column;background:radial-gradient(ellipse at center,#202332,#11131b 70%)}.stagehead{min-height:50px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 16px;color:#9ca2b6;font-size:12px;flex-wrap:wrap}.stagehead button{background:none;border:0;color:#c6cadd}.canvas-dimensions{display:flex;align-items:center;gap:6px}.canvas-dimensions input{width:68px;background:#1c1f2c;border:1px solid #303548;border-radius:7px;padding:6px;color:#f1f2f8;font-size:11px}.canvas-dimensions button{background:#252038;border:1px solid #514275;border-radius:7px;padding:6px 9px;color:#eee}.canvas-grip{position:absolute;right:-9px;bottom:-9px;width:22px;height:22px;border-radius:6px;background:#9875ff;border:2px solid #fff;box-shadow:0 2px 12px #0008;cursor:nwse-resize;z-index:3;touch-action:none}.canvas-grip:after{content:'↘';display:block;color:white;font-size:13px;text-align:center;line-height:17px}.canvaswrap{flex:1;min-height:0;display:grid;place-items:center;padding:24px;overflow:hidden}.canvasframe{position:relative;width:min(100%,850px);aspect-ratio:900 / 600;max-height:100%;display:grid;place-items:center;filter:drop-shadow(0 20px 45px #0007);flex:none}#svgcanvas{width:100%;height:100%;background:white;touch-action:none;user-select:none;overflow:visible;display:block}#svgcanvas [data-id]{cursor:move}.selection{fill:none;stroke:#805cff;stroke-width:1.5;stroke-dasharray:5 4;pointer-events:none}.handle{fill:#fff;stroke:#805cff;stroke-width:2;pointer-events:all;cursor:nwse-resize}.statusbar{height:30px;flex-shrink:0;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 16px;color:#777f95;font-size:11px}
+.sidebar{background:#141620;border-left:1px solid var(--line);overflow:auto;padding:24px 22px;min-width:0}.sidehead{font:800 16px Manrope;margin:0 0 17px;display:flex;justify-content:space-between}.sidehead small{color:#858ba0;font:500 11px "DM Sans"}.panel{border-bottom:1px solid var(--line);padding-bottom:17px;margin-bottom:17px}.empty{border:1px dashed #393d50;border-radius:14px;padding:30px 18px;text-align:center;color:#8e95aa;font-size:12px;line-height:1.6}.empty strong{display:block;color:#d9dcef;font-size:13px;margin-bottom:5px}.fieldgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}.field label{font-size:12px;color:#aeb5ca;font-weight:600}.field input,.field select{width:100%;background:#1c1f2c;border:1px solid #303548;border-radius:9px;padding:10px 11px;color:#f1f2f8;min-width:0;outline:none}.field input:focus{border-color:var(--purple)}.colorrow{display:flex;align-items:center;gap:9px}.colorrow input[type=color]{width:35px;height:30px;padding:2px;border:1px solid #34384b;border-radius:7px;background:#1c1f2c}.layerrow{display:flex;align-items:center;gap:7px;padding:8px;border:1px solid transparent;border-radius:8px;color:#b9bfd1;font-size:12px}.layerrow.selected{background:#252038;border-color:#514275;color:white}.layerrow button{background:none;border:0;color:#9097ac;padding:3px}.layername{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer}.layerslist{display:flex;flex-direction:column;gap:3px}.actionrow{display:flex;gap:7px}.actionrow button{flex:1}.hint{color:#777f94;font-size:11px;line-height:1.5}
+@media(max-width:1000px){.workspace{grid-template-columns:92px minmax(0,1fr)}.sidebar{position:absolute;right:0;top:62px;bottom:30px;width:min(390px,88vw);z-index:5;box-shadow:-15px 0 40px #0008;display:none}.sidebar.open{display:block}}
+@media(max-width:850px){.hero{grid-template-columns:1fr;padding-top:65px}.preview{max-width:600px}.features{grid-template-columns:1fr}.tool{width:100%}.canvaswrap{padding:12px}.navlinks{display:none}}
+@media(max-width:650px){.story>div[style*="grid-template-columns"],section[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important}}
+@media(max-width:560px){.hero h1{letter-spacing:-2px}.hero{padding-top:50px}.previewart{height:240px}.topbar{padding:0 9px}.projectname{display:none}.topbutton{padding:7px 9px}.workspace{grid-template-columns:76px minmax(0,1fr)}.toolbar{padding:8px 5px}.tool{width:100%;min-height:48px;font-size:10px}.tool span{font-size:17px}.canvaswrap{padding:8px}.canvas-dimensions input{width:54px}}
+</style>
+</head>
+<body>
+<div id="home">
+  <nav class="nav">
+    <div class="brand"><svg class="logo" viewBox="0 0 40 40" fill="none"><path d="M13 3L16.5 14.5L28 18L16.5 21.5L13 33L9.5 21.5L-2 18L9.5 14.5L13 3Z" fill="#B99AFF"/><path d="M29 18L31.2 25.3L38.5 27.5L31.2 29.7L29 37L26.8 29.7L19.5 27.5L26.8 25.3L29 18Z" fill="#E9A2FF"/></svg>SVGCraft</div>
+    <div class="navlinks"><a href="#features">Features</a><a href="#about">About</a></div>
+    <button class="navbtn" onclick="openEditor()">Open editor ↗</button>
+  </nav>
+  <main class="hero">
+    <div><div class="eyebrow">A little creativity goes a long way</div><h1>Make something<br><span class="gradient">wonderful.</span></h1><p>A clean, friendly vector workspace for turning ideas into crisp, scalable SVG artwork. Make shapes, customize every detail, and export when you're ready.</p><div class="heroactions"><button class="primary" onclick="openEditor()">Start creating&nbsp; →</button><button class="secondary" onclick="document.querySelector('#features').scrollIntoView({behavior:'smooth'})">Explore features</button></div></div>
+    <div class="preview"><div class="previewbar"><i class="dot"></i><i class="dot"></i><i class="dot"></i></div><div class="previewart"><svg viewBox="0 0 420 300"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#B99AFF"/><stop offset="1" stop-color="#7DDCFF"/></linearGradient></defs><circle cx="210" cy="150" r="105" fill="#ffffff0d"/><path d="M210 38L238 122L322 150L238 178L210 262L182 178L98 150L182 122Z" fill="url(#g)"/><path d="M310 45L326 93L374 109L326 125L310 173L294 125L246 109L294 93Z" fill="#F1A7FF"/><circle cx="115" cy="75" r="8" fill="#fff" opacity=".8"/><circle cx="330" cy="230" r="5" fill="#fff" opacity=".6"/></svg></div></div>
+  </main>
+  <section class="story" style="max-width:1180px;margin:0 auto;padding:45px 28px 85px">
+    <div style="max-width:720px;margin-bottom:32px"><div class="eyebrow">Your ideas, in their element</div><h2 style="font:800 clamp(34px,4vw,52px)/1.1 Manrope;letter-spacing:-2px;margin:14px 0">A workspace that stays <span class="gradient">out of your way.</span></h2><p style="color:#aeb3c7;font-size:17px;line-height:1.75">SVGCraft gives you the essential tools without burying your canvas under complicated menus. Start with a shape, build it up, and fine-tune the details whenever inspiration strikes.</p></div>
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px">
+      <div class="feature" style="min-height:190px"><div style="font-size:27px;color:#c5a9ff;margin-bottom:18px">✦</div><b>Build from simple shapes</b><p>Start with rectangles, circles, stars, triangles, lines, and text. Combine simple elements into artwork that feels entirely yours.</p></div>
+      <div class="feature" style="min-height:190px"><div style="font-size:27px;color:#9fe4ff;margin-bottom:18px">◈</div><b>Fine-tune every detail</b><p>Use the properties inspector to adjust colors, outlines, dimensions, position, transparency, and rotation with precision.</p></div>
+      <div class="feature" style="min-height:190px"><div style="font-size:27px;color:#e7a5ff;margin-bottom:18px">↗</div><b>Work visually</b><p>Move objects directly on the canvas, resize them with handles, and keep track of your design with the layers panel.</p></div>
+      <div class="feature" style="min-height:190px"><div style="font-size:27px;color:#a8e9ce;margin-bottom:18px">⬡</div><b>Export clean vector art</b><p>SVG keeps your artwork crisp at any size, making it useful for web graphics, icons, and other creative projects.</p></div>
+    </div>
+  </section>
+  <section style="padding:80px 28px;background:linear-gradient(120deg,#191629,#111c2a);border-top:1px solid #ffffff12;border-bottom:1px solid #ffffff12">
+    <div style="max-width:1050px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:45px;align-items:center">
+      <div><div class="eyebrow">From blank canvas to finished idea</div><h2 style="font:800 clamp(34px,4vw,48px)/1.1 Manrope;letter-spacing:-2px;margin:15px 0">Your workflow.<br><span class="gradient">Your way.</span></h2><p style="color:#aeb3c7;line-height:1.8;font-size:16px">Create a shape, select it, then use the inspector to make it yours. Drag objects around the artboard and use the corner handles to change their size. The canvas is the workspace, not a puzzle to solve.</p><button class="primary" onclick="openEditor()">Open the editor →</button></div>
+      <div class="feature" style="padding:30px;background:#ffffff09"><div style="display:flex;justify-content:space-between;color:#9ca3b8;font-size:12px;margin-bottom:22px"><span>THE CREATIVE LOOP</span><span>01 / 03</span></div><div style="font:800 24px Manrope;margin-bottom:10px">Create → Customize → Export</div><p>Choose a tool and add an object. Select it to reveal its controls. When the design feels right, export your SVG and take it wherever you need it.</p><div style="display:flex;gap:8px;margin-top:25px"><span style="height:5px;flex:1;border-radius:5px;background:#a98aff"></span><span style="height:5px;flex:1;border-radius:5px;background:#d48fe9"></span><span style="height:5px;flex:1;border-radius:5px;background:#7edfff"></span></div></div>
+    </div>
+  </section>
+  <section class="features" id="features"><div class="feature"><b>✦ Direct manipulation</b><p>Move objects by dragging them on the canvas. Resize, rotate, and arrange your artwork visually.</p></div><div class="feature"><b>◈ Detailed properties</b><p>Select an object to edit its position, dimensions, fill, stroke, opacity, and more.</p></div><div class="feature"><b>↗ Ready to export</b><p>Save your artwork as clean SVG or export a PNG for sharing and use elsewhere.</p></div></section>
+  <footer class="footer" id="about"><span>© 2026 SVGCraft · Created by PSANDILYA1440</span><span>Made for curious minds ✦</span></footer>
+</div>
+
+<div id="editor">
+  <header class="topbar"><div class="top-left"><div class="smallbrand"><svg class="logo" viewBox="0 0 40 40" fill="none"><path d="M13 3L16.5 14.5L28 18L16.5 21.5L13 33L9.5 21.5L-2 18L9.5 14.5L13 3Z" fill="#B99AFF"/><path d="M29 18L31.2 25.3L38.5 27.5L31.2 29.7L29 37L26.8 29.7L19.5 27.5L26.8 25.3L29 18Z" fill="#E9A2FF"/></svg>SVGCraft</div><span class="projectname">Untitled project</span></div><div class="top-right"><button class="topbutton" onclick="undo()">↶ Undo</button><button class="topbutton" onclick="redo()">↷ Redo</button><button class="topbutton" onclick="toggleSidebar()">☷ Properties</button><button class="topbutton primary" onclick="exportSVG()">Export SVG ↓</button><button class="topbutton" onclick="goHome()">Home</button></div></header>
+  <div class="workspace">
+    <aside class="toolbar">
+      <button class="tool active" data-tool="select" title="Select and drag"><span>↖</span>Select</button>
+      <div class="toolsep"></div>
+      <button class="tool" data-tool="rect"><span>▭</span>Rectangle</button>
+      <button class="tool" data-tool="circle"><span>◯</span>Circle</button>
+      <button class="tool" data-tool="ellipse"><span>⬭</span>Ellipse</button>
+      <button class="tool" data-tool="triangle"><span>△</span>Triangle</button>
+      <button class="tool" data-tool="star"><span>☆</span>Star</button>
+      <button class="tool" data-tool="line"><span>／</span>Line</button>
+      <button class="tool" data-tool="text"><span>T</span>Text</button>
+      <div class="toolsep"></div>
+      <button class="tool" onclick="deleteSelected()"><span>⌫</span>Delete</button>
+    </aside>
+    <main class="stage">
+      <div class="stagehead"><span>Canvas · <span id="canvas-size">900 × 600</span></span><div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap"><div class="canvas-dimensions"><span>W</span><input id="canvas-width" type="number" min="100" max="5000" value="900" aria-label="Canvas width"><span>H</span><input id="canvas-height" type="number" min="100" max="5000" value="600" aria-label="Canvas height"><button onclick="applyCanvasSize()">Apply size</button></div><span><button onclick="setZoom(-.1)">−</button>&nbsp; <span id="zoom-label">100%</span>&nbsp; <button onclick="setZoom(.1)">＋</button></span></div></div>
+      <div class="canvaswrap"><div class="canvasframe" id="canvasframe"><svg id="svgcanvas" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" aria-label="SVG design canvas"><rect width="900" height="600" fill="#ffffff" id="canvas-bg"/><g id="art"></g><g id="selection-layer"></g></svg><div class="canvas-grip" id="canvas-grip" title="Drag to resize the canvas" aria-label="Drag to resize canvas"></div></div></div>
+      <div class="statusbar"><span id="status">Select an object and drag to move it. No arrow keys required.</span><span>SVG · 900 × 600</span></div>
+    </main>
+    <aside class="sidebar open" id="sidebar">
+      <section class="panel"><h3 class="sidehead">Properties <small id="selected-label">Nothing selected</small></h3><div id="empty-state" class="empty"><strong>Select an object</strong>Click any shape on the canvas. Its editable properties will appear here automatically.</div>
+      <div id="properties" style="display:none">
+        <div class="field"><label>Object name</label><input id="p-name" type="text"></div>
+        <div class="fieldgrid"><div class="field"><label>X position</label><input id="p-x" type="number" step="1"></div><div class="field"><label>Y position</label><input id="p-y" type="number" step="1"></div><div class="field"><label>Width</label><input id="p-w" type="number" min="1"></div><div class="field"><label>Height</label><input id="p-h" type="number" min="1"></div></div>
+        <div class="field"><label>Fill color</label><div class="colorrow"><input id="p-fill" type="color"><input id="p-fill-text" type="text" value="#9875ff"></div></div>
+        <div class="field"><label>Stroke color</label><div class="colorrow"><input id="p-stroke" type="color"><input id="p-stroke-text" type="text" value="#2c2348"></div></div>
+        <div class="fieldgrid"><div class="field"><label>Stroke width</label><input id="p-sw" type="number" min="0" max="40" step="1"></div><div class="field"><label>Opacity %</label><input id="p-opacity" type="number" min="0" max="100"></div><div class="field"><label>Rotation °</label><input id="p-rotation" type="number"></div></div>
+        <div class="field" id="text-field" style="display:none"><label>Text content</label><input id="p-text" type="text"></div>
+        <div class="actionrow"><button class="topbutton" onclick="duplicateSelected()">Duplicate</button><button class="topbutton" onclick="deleteSelected()">Delete</button></div>
+      </div></section>
+      <section class="panel"><h3 class="sidehead">Layers <small id="layer-count">0 objects</small></h3><div id="layers" class="layerslist"></div></section>
+      <p class="hint">Tip: click and drag an object directly on the canvas. Use the properties above for precise values. Touch screens are supported too.</p>
+    </aside>
+  </div>
+</div>
+<script>
+const NS='http://www.w3.org/2000/svg';
+const $=id=>document.getElementById(id);
+let objects=[],selected=null,nextId=1,tool='select',zoom=1,history=[],future=[],drag=null;
+let canvasW=900,canvasH=600,canvasResize=null;
+const art=$('art'),svg=$('svgcanvas'),selLayer=$('selection-layer');
+
+function openEditor(){
+ $('home').style.display='none';
+ $('editor').style.display='flex';
+ render();
+}
+function goHome(){
+ $('editor').style.display='none';
+ $('home').style.display='block';
+}
+function toggleSidebar(){ $('sidebar').classList.toggle('open'); }
+function setZoom(v){
+ zoom=Math.max(.35,Math.min(1.5,zoom+v));
+ $('canvasframe').style.transform=`scale(${zoom})`;
+ $('zoom-label').textContent=Math.round(zoom*100)+'%';
+}
+function syncCanvasLabels(){
+ $('canvas-size').textContent=`${canvasW} × ${canvasH}`;
+ $('canvas-width').value=canvasW;
+ $('canvas-height').value=canvasH;
+ const statusSize=document.querySelector('.statusbar span:last-child');
+ if(statusSize)statusSize.textContent=`SVG · ${canvasW} × ${canvasH}`;
+}
+function applyCanvasSize(){
+ const w=Math.max(100,Math.min(5000,Math.round(Number($('canvas-width').value)||canvasW)));
+ const h=Math.max(100,Math.min(5000,Math.round(Number($('canvas-height').value)||canvasH)));
+ snapshot();
+ canvasW=w;canvasH=h;
+ svg.setAttribute('viewBox',`0 0 ${canvasW} ${canvasH}`);
+ svg.setAttribute('width',canvasW);
+ svg.setAttribute('height',canvasH);
+ $('canvas-bg').setAttribute('width',canvasW);
+ $('canvas-bg').setAttribute('height',canvasH);
+ $('canvasframe').style.aspectRatio=`${canvasW} / ${canvasH}`;
+ syncCanvasLabels();
+ render();
+ $('status').textContent=`Canvas resized to ${canvasW} × ${canvasH}.`;
+}
+$('canvas-width').addEventListener('keydown',e=>{if(e.key==='Enter')applyCanvasSize();});
+$('canvas-height').addEventListener('keydown',e=>{if(e.key==='Enter')applyCanvasSize();});
+
+function snapshot(){
+ history.push(JSON.stringify({objects,selected,nextId,canvasW,canvasH}));
+ if(history.length>80)history.shift();
+ future=[];
+}
+function restore(s){
+ let d=JSON.parse(s);
+ objects=d.objects;selected=d.selected;nextId=d.nextId;
+ if(d.canvasW){canvasW=d.canvasW;canvasH=d.canvasH;}
+ svg.setAttribute('viewBox',`0 0 ${canvasW} ${canvasH}`);
+ svg.setAttribute('width',canvasW);svg.setAttribute('height',canvasH);
+ $('canvas-bg').setAttribute('width',canvasW);
+ $('canvas-bg').setAttribute('height',canvasH);
+ $('canvasframe').style.aspectRatio=`${canvasW} / ${canvasH}`;
+ syncCanvasLabels();
+ render();
+}
+function undo(){
+ if(!history.length)return;
+ future.push(JSON.stringify({objects,selected,nextId,canvasW,canvasH}));
+ restore(history.pop());
+}
+function redo(){
+ if(!future.length)return;
+ history.push(JSON.stringify({objects,selected,nextId,canvasW,canvasH}));
+ restore(future.pop());
+}
+
+function makeObject(type,x=360,y=220){
+ let o={
+  id:nextId++,type,name:type[0].toUpperCase()+type.slice(1)+' '+nextId,
+  x,y,w:type==='line'?160:150,h:type==='line'?0:120,
+  fill:type==='line'?'#2c2348':'#9875ff',
+  stroke:'#2c2348',sw:3,opacity:100,rotation:0,text:'Your text'
+ };
+ if(type==='circle'||type==='star')o.w=o.h=120;
+ return o;
+}
+function addObject(type){
+ snapshot();
+ let o=makeObject(type,Math.round((canvasW-150)/2),Math.round((canvasH-120)/2));
+ objects.push(o);selected=o.id;
+ setTool('select');render();
+ $('status').textContent='Object added. Drag it anywhere on the canvas.';
+}
+function setTool(t){
+ tool=t;
+ document.querySelectorAll('[data-tool]').forEach(b=>
+  b.classList.toggle('active',b.dataset.tool===t)
+ );
+}
+document.querySelectorAll('[data-tool]').forEach(b=>
+ b.addEventListener('click',()=>{
+  if(b.dataset.tool==='select'){setTool('select');return;}
+  addObject(b.dataset.tool);
+ })
+);
+
+function el(tag,attrs={}){
+ let n=document.createElementNS(NS,tag);
+ for(let k in attrs)n.setAttribute(k,attrs[k]);
+ return n;
+}
+function shapeNode(o){
+ let n;
+ const common={
+  fill:o.type==='line'?'none':o.fill,
+  stroke:o.stroke,'stroke-width':o.sw,
+  opacity:o.opacity/100,
+  'stroke-linejoin':'round','stroke-linecap':'round'
+ };
+ if(o.type==='rect')
+  n=el('rect',{x:0,y:0,width:o.w,height:o.h,rx:5,...common});
+ else if(o.type==='circle'||o.type==='ellipse')
+  n=el('ellipse',{cx:o.w/2,cy:o.h/2,rx:o.w/2,ry:o.h/2,...common});
+ else if(o.type==='triangle')
+  n=el('polygon',{points:`${o.w/2},0 ${o.w},${o.h} 0,${o.h}`,...common});
+ else if(o.type==='star'){
+  let pts=[];
+  for(let i=0;i<10;i++){
+   let r=i%2?o.w*.22:o.w*.48;
+   let a=-Math.PI/2+i*Math.PI/5;
+   pts.push(`${o.w/2+Math.cos(a)*r},${o.h/2+Math.sin(a)*r}`);
+  }
+  n=el('polygon',{points:pts.join(' '),...common});
+ }else if(o.type==='line')
+  n=el('line',{x1:0,y1:0,x2:o.w,y2:o.h,...common});
+ else if(o.type==='text'){
+  n=el('text',{
+   x:0,y:Math.max(28,o.h*.65),fill:o.fill,stroke:o.stroke,
+   'stroke-width':o.sw/3,opacity:o.opacity/100,
+   'font-family':'DM Sans, sans-serif',
+   'font-size':Math.max(16,o.h*.45),'font-weight':700
+  });
+  n.textContent=o.text;
+ }
+ return n;
+}
+function render(){
+ art.replaceChildren();
+ objects.forEach(o=>{
+  let g=el('g',{
+   'data-id':o.id,
+   transform:`translate(${o.x} ${o.y}) rotate(${o.rotation} ${o.w/2} ${o.h/2})`
+  });
+  g.append(shapeNode(o));art.append(g);
+ });
+ renderSelection();renderLayers();showProperties();
+}
+function renderSelection(){
+ selLayer.replaceChildren();
+ let o=objects.find(x=>x.id===selected);
+ if(!o)return;
+ let g=el('g',{
+  transform:`translate(${o.x} ${o.y}) rotate(${o.rotation} ${o.w/2} ${o.h/2})`
+ });
+ g.append(el('rect',{
+  x:-4,y:-4,width:o.w+8,height:Math.max(8,o.h)+8,class:'selection'
+ }));
+ [
+  [-4,-4,'nw'],[o.w+4,-4,'ne'],
+  [-4,o.h+4,'sw'],[o.w+4,o.h+4,'se']
+ ].forEach(([x,y,pos])=>{
+  g.append(el('rect',{
+   x:x-5,y:y-5,width:10,height:10,rx:2,
+   class:'handle','data-handle':pos
+  }));
+ });
+ selLayer.append(g);
+}
+function renderLayers(){
+ $('layers').replaceChildren();
+ $('layer-count').textContent=objects.length+' objects';
+ [...objects].reverse().forEach(o=>{
+  let row=document.createElement('div');
+  row.className='layerrow'+(o.id===selected?' selected':'');
+  let name=document.createElement('span');
+  name.className='layername';name.textContent=o.name;
+  name.onclick=()=>{selected=o.id;render();};
+  let eye=document.createElement('button');
+  eye.textContent='◉';eye.title='Select layer';
+  eye.onclick=()=>{selected=o.id;render();};
+  let del=document.createElement('button');
+  del.textContent='×';del.title='Delete layer';
+  del.onclick=()=>{
+   snapshot();
+   objects=objects.filter(x=>x.id!==o.id);
+   if(selected===o.id)selected=null;
+   render();
+  };
+  row.append(eye,name,del);
+  $('layers').append(row);
+ });
+}
+function showProperties(){
+ let o=objects.find(x=>x.id===selected);
+ let empty=!o;
+ $('empty-state').style.display=empty?'block':'none';
+ $('properties').style.display=empty?'none':'block';
+ $('selected-label').textContent=o?o.name:'Nothing selected';
+ if(!o)return;
+ const vals={
+  name:o.name,x:o.x,y:o.y,w:o.w,h:o.h,
+  fill:o.fill,stroke:o.stroke,sw:o.sw,
+  opacity:o.opacity,rotation:o.rotation,text:o.text
+ };
+ Object.entries(vals).forEach(([k,v])=>{
+  let n=$('p-'+k);
+  if(n&&document.activeElement!==n)n.value=v;
+ });
+ $('text-field').style.display=o.type==='text'?'block':'none';
+}
+function updateProp(key,value){
+ let o=objects.find(x=>x.id===selected);
+ if(!o)return;
+ snapshot();
+ if(['x','y','w','h','sw','opacity','rotation'].includes(key))
+  value=Number(value);
+ if(['w','h'].includes(key))value=Math.max(1,value);
+ if(key==='opacity')value=Math.max(0,Math.min(100,value));
+ if(key==='sw')value=Math.max(0,Math.min(40,value));
+ o[key]=value;
+ render();
+}
+[
+ 'name','x','y','w','h','fill','stroke',
+ 'sw','opacity','rotation','text'
+].forEach(k=>{
+ let n=$('p-'+k);
+ if(n)n.addEventListener('change',()=>{
+  updateProp(k,n.type==='number'?Number(n.value):n.value);
+ });
+});
+$('p-fill-text').addEventListener('change',e=>{
+ let v=e.target.value;
+ if(/^#[0-9a-f]{6}$/i.test(v))updateProp('fill',v);
+});
+$('p-stroke-text').addEventListener('change',e=>{
+ let v=e.target.value;
+ if(/^#[0-9a-f]{6}$/i.test(v))updateProp('stroke',v);
+});
+$('p-fill').addEventListener('input',e=>{
+ let o=objects.find(x=>x.id===selected);
+ if(o){o.fill=e.target.value;$('p-fill-text').value=o.fill;render();}
+});
+$('p-stroke').addEventListener('input',e=>{
+ let o=objects.find(x=>x.id===selected);
+ if(o){o.stroke=e.target.value;$('p-stroke-text').value=o.stroke;render();}
+});
+
+function point(e){
+ let p=svg.createSVGPoint();
+ p.x=e.clientX;p.y=e.clientY;
+ let m=svg.getScreenCTM();
+ if(!m)return{x:0,y:0};
+ p=p.matrixTransform(m.inverse());
+ return{x:p.x,y:p.y};
+}
+function selectedObject(){return objects.find(o=>o.id===selected);}
+function rotatePoint(x,y,cx,cy,a){
+ const r=a*Math.PI/180,dx=x-cx,dy=y-cy;
+ return {
+  x:cx+dx*Math.cos(r)-dy*Math.sin(r),
+  y:cy+dx*Math.sin(r)+dy*Math.cos(r)
+ };
+}
+function localPointFor(o,p){
+ const c=rotatePoint(p.x,p.y,o.x+o.w/2,o.y+o.h/2,-o.rotation);
+ return{x:c.x-o.x,y:c.y-o.y};
+}
+function worldPointFor(o,lx,ly){
+ const q=rotatePoint(lx,ly,o.w/2,o.h/2,o.rotation);
+ return{x:o.x+q.x,y:o.y+q.y};
+}
+
+svg.addEventListener('pointerdown',e=>{
+ if(e.button!==0)return;
+ const p=point(e);
+ const handle=e.target.closest('[data-handle]');
+
+ if(handle&&selectedObject()){
+  const o=selectedObject();
+  const corner=handle.getAttribute('data-handle');
+  snapshot();
+  const fixed={
+   nw:[o.w,o.h],ne:[0,o.h],
+   sw:[o.w,0],se:[0,0]
+  }[corner];
+  drag={
+   kind:'resize',id:o.id,corner,pointerId:e.pointerId,
+   orig:{x:o.x,y:o.y,w:o.w,h:o.h,rotation:o.rotation},
+   fixedLocal:fixed,
+   fixedWorld:worldPointFor(o,fixed[0],fixed[1])
+  };
+  svg.setPointerCapture(e.pointerId);
+  e.preventDefault();
+  $('status').textContent='Resize handle active. Drag to resize.';
+  return;
+ }
+
+ const target=e.target.closest('[data-id]');
+ if(tool!=='select'){addObject(tool);return;}
+ if(target){
+  const id=Number(target.getAttribute('data-id'));
+  const o=objects.find(x=>x.id===id);
+  if(!o)return;
+  if(selected!==id){
+   selected=id;showProperties();renderSelection();renderLayers();
+  }
+  snapshot();
+  drag={
+   kind:'move',id,startX:p.x,startY:p.y,
+   origX:o.x,origY:o.y,pointerId:e.pointerId
+  };
+  svg.setPointerCapture(e.pointerId);
+  $('status').textContent='Dragging '+o.name+'…';
+  e.preventDefault();
+ }else{
+  selected=null;render();
+  $('status').textContent='Nothing selected. Choose a shape or add one from the toolbar.';
+ }
+});
+
+svg.addEventListener('pointermove',e=>{
+ if(!drag||drag.pointerId!==e.pointerId)return;
+ const o=objects.find(x=>x.id===drag.id);
+ if(!o)return;
+ const p=point(e);
+ if(drag.kind==='move'){
+  o.x=Math.round(drag.origX+p.x-drag.startX);
+  o.y=Math.round(drag.origY+p.y-drag.startY);
+ }else if(drag.kind==='resize'){
+  const a=drag.orig,c=drag.corner;
+  const lp=localPointFor(a,p);
+  const newW=Math.max(12,Math.abs(lp.x-drag.fixedLocal[0]));
+  const newH=Math.max(12,Math.abs(lp.y-drag.fixedLocal[1]));
+  o.w=newW;o.h=newH;
+  const fx=(c==='nw'||c==='sw')?newW:0;
+  const fy=(c==='nw'||c==='ne')?newH:0;
+  const rotated=rotatePoint(fx,fy,newW/2,newH/2,a.rotation);
+  o.x=drag.fixedWorld.x-rotated.x;
+  o.y=drag.fixedWorld.y-rotated.y;
+ }
+ const g=art.querySelector(`[data-id="${o.id}"]`);
+ if(g)g.setAttribute('transform',`translate(${o.x} ${o.y}) rotate(${o.rotation} ${o.w/2} ${o.h/2})`);
+ const n=g&&g.firstElementChild;
+ if(n){
+  if(o.type==='rect'){n.setAttribute('width',o.w);n.setAttribute('height',o.h);}
+  else if(o.type==='circle'||o.type==='ellipse'){
+   n.setAttribute('cx',o.w/2);n.setAttribute('cy',o.h/2);
+   n.setAttribute('rx',o.w/2);n.setAttribute('ry',o.h/2);
+  }else if(o.type==='triangle')n.setAttribute('points',`${o.w/2},0 ${o.w},${o.h} 0,${o.h}`);
+  else if(o.type==='star'){
+   let pts=[];
+   for(let i=0;i<10;i++){
+    let r=i%2?o.w*.22:o.w*.48,a=-Math.PI/2+i*Math.PI/5;
+    pts.push(`${o.w/2+Math.cos(a)*r},${o.h/2+Math.sin(a)*r}`);
+   }
+   n.setAttribute('points',pts.join(' '));
+  }else if(o.type==='line'){n.setAttribute('x2',o.w);n.setAttribute('y2',o.h);}
+  else if(o.type==='text'){n.setAttribute('y',Math.max(28,o.h*.65));n.setAttribute('font-size',Math.max(16,o.h*.45));}
+ }
+ renderSelection();showProperties();
+});
+function endDrag(e){
+ if(!drag||drag.pointerId!==e.pointerId)return;
+ drag=null;
+ $('status').textContent='Done. Drag another object or adjust its properties.';
+}
+svg.addEventListener('pointerup',endDrag);
+svg.addEventListener('pointercancel',endDrag);
+svg.addEventListener('lostpointercapture',endDrag);
+
+// Drag the purple bottom-right canvas grip to change the actual artboard dimensions.
+const grip=$('canvas-grip');
+grip.addEventListener('pointerdown',e=>{
+ e.preventDefault();e.stopPropagation();
+ snapshot();
+ const rect=$('canvasframe').getBoundingClientRect();
+ canvasResize={
+  pointerId:e.pointerId,startX:e.clientX,startY:e.clientY,
+  startW:canvasW,startH:canvasH,
+  pxPerUnitX:rect.width/canvasW,pxPerUnitY:rect.height/canvasH
+ };
+ grip.setPointerCapture(e.pointerId);
+});
+grip.addEventListener('pointermove',e=>{
+ if(!canvasResize||canvasResize.pointerId!==e.pointerId)return;
+ const c=canvasResize;
+ const w=Math.max(100,Math.min(5000,Math.round(c.startW+(e.clientX-c.startX)/Math.max(.05,c.pxPerUnitX))));
+ const h=Math.max(100,Math.min(5000,Math.round(c.startH+(e.clientY-c.startY)/Math.max(.05,c.pxPerUnitY))));
+ canvasW=w;canvasH=h;
+ svg.setAttribute('viewBox',`0 0 ${canvasW} ${canvasH}`);
+ svg.setAttribute('width',canvasW);svg.setAttribute('height',canvasH);
+ $('canvas-bg').setAttribute('width',canvasW);$('canvas-bg').setAttribute('height',canvasH);
+ $('canvasframe').style.aspectRatio=`${canvasW} / ${canvasH}`;
+ syncCanvasLabels();
+});
+function finishCanvasResize(e){
+ if(!canvasResize||canvasResize.pointerId!==e.pointerId)return;
+ canvasResize=null;
+ $('status').textContent=`Canvas resized to ${canvasW} × ${canvasH}.`;
+}
+grip.addEventListener('pointerup',finishCanvasResize);
+grip.addEventListener('pointercancel',finishCanvasResize);
+
+function deleteSelected(){
+ if(!selected)return;
+ snapshot();
+ objects=objects.filter(o=>o.id!==selected);
+ selected=null;render();
+}
+function duplicateSelected(){
+ let o=selectedObject();
+ if(!o)return;
+ snapshot();
+ let c={...o,id:nextId++,name:o.name+' copy',x:o.x+24,y:o.y+24};
+ objects.push(c);selected=c.id;render();
+}
+function exportSVG(){
+ const clone=svg.cloneNode(true);
+ const selection=clone.querySelector('#selection-layer');
+ if(selection)selection.remove();
+ clone.setAttribute('xmlns',NS);
+ clone.setAttribute('width',canvasW);
+ clone.setAttribute('height',canvasH);
+ clone.setAttribute('viewBox',`0 0 ${canvasW} ${canvasH}`);
+ const blob=new Blob([new XMLSerializer().serializeToString(clone)],{type:'image/svg+xml'});
+ downloadBlob(blob,'sv-craft-artwork.svg');
+}
+function downloadBlob(blob,name){
+ let a=document.createElement('a');
+ a.href=URL.createObjectURL(blob);a.download=name;a.click();
+ setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+document.addEventListener('keydown',e=>{
+ if(e.target.matches('input'))return;
+ if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();undo();}
+ else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='y'){e.preventDefault();redo();}
+ else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='d'){e.preventDefault();duplicateSelected();}
+ else if(e.key==='Delete'||e.key==='Backspace')deleteSelected();
+});
+syncCanvasLabels();
+</script>
+</body>
+</html>
